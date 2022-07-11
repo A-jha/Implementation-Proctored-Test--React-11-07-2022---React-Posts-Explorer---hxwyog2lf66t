@@ -55,9 +55,9 @@ export const Post = () => {
       {loaded ? (
         <div>
           <h1 className="post-id">Post-id:- {post.id}</h1>
-          <h2 className="post-body">{post.title}</h2>
+          <h2 className="post-title">{post.title}</h2>
           <p className="post-body">{post.body}</p>
-          <p className="post-author">{user.name}</p>
+          <p className="post-author">By:-{user.name}</p>
           <NavLink to="/">Back to Home</NavLink>
         </div>
       ) : (

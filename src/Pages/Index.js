@@ -48,6 +48,12 @@ export const Index = () => {
               })}
           </ul>
           <div>
+            {console.log(
+              posts.filter(function (v, i) {
+                return i == posts.lastIndexOf(v);
+              }),
+              "kjnskajzn"
+            )}
             {pages.map((page) => {
               return (
                 <button
