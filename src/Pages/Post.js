@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { NavLink, useParams } from "react-router-dom";
+import Loader from "../components/Loader";
 
 /*
     On clicking link in PostPreview component navigate to /post/:id, which shows the Post Page.
@@ -18,10 +20,49 @@ import React from "react";
  */
 
 export const Post = () => {
-
-    return (
-        <div id="post">
-
+  const prams = useParams();
+  const [loaded, setLoaded] = useState(false);
+  const [post, setPost] = useState({});
+  const [user, setUser] = useState({});
+  const [userId, setUserId] = useState(1);
+  const fetchData = async () => {
+    const res = await fetch(
+      `https://jsonplaceholder.typicode.com/posts/${prams.id}`
+    );
+    const data = await res.json();
+    await console.log(data);
+    setPost(data);
+    setUserId(data.userId);
+    setLoaded(true);
+  };
+  const fetchUser = async () => {
+    console.log(userId);
+    const res = await fetch(
+      `https://jsonplaceholder.typicode.com/users/${userId}`
+    );
+    const data = await res.json();
+    await console.log(data);
+    setUser(data);
+    setLoaded(true);
+  };
+  console.log(user[0]);
+  useEffect(() => {
+    fetchData();
+    fetchUser();
+  }, []);
+  return (
+    <div id="post">
+      {loaded ? (
+        <div>
+          <h1 className="post-id">Post-id:- {post.id}</h1>
+          <h2 className="post-body">{post.title}</h2>
+          <p className="post-body">{post.body}</p>
+          <p className="post-author">{user.name}</p>
+          <NavLink to="/">Back to Home</NavLink>
         </div>
-    )
-}
+      ) : (
+        <Loader />
+      )}
+    </div>
+  );
+};

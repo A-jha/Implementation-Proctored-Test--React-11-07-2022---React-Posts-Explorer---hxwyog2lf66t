@@ -1,6 +1,6 @@
-import React from 'react';
-
-
+import React, { useEffect, useState } from "react";
+import Loader from "../components/Loader";
+import PostPreview from "../components/PostPreview";
 /*
 2) On Index Page, make an initial request to <code>https://jsonplaceholder.typicode.com/posts</code> to get all the posts. <br/>
     While the request is in progress, display a <code>Loader</code> component. <br/>
@@ -16,10 +16,56 @@ import React from 'react';
 */
 
 export const Index = () => {
-
-    return( 
-        <div id="index">
-
+  const [pageNo, setPageNo] = useState(1);
+  const [loaded, setLoaded] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const fetchData = async () => {
+    const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const data = await res.json();
+    await console.log(data);
+    setPosts(data);
+    setLoaded(true);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  return (
+    <div id="index">
+      {loaded ? (
+        <div id="post">
+          <ul id="postsList">
+            {posts
+              .filter((post) => post.userId === pageNo)
+              .map((post, index) => {
+                return (
+                  <li key={post.id}>
+                    <PostPreview
+                      post={post}
+                      className={index % 2 === 0 ? "event" : "odd"}
+                    />
+                  </li>
+                );
+              })}
+          </ul>
+          <div>
+            {pages.map((page) => {
+              return (
+                <button
+                  key={page}
+                  onClick={(e) => setPageNo(page)}
+                  value={page}
+                  id={"page-" + page}
+                >
+                  {page}
+                </button>
+              );
+            })}
+          </div>
         </div>
-    )
-}
+      ) : (
+        <Loader />
+      )}
+    </div>
+  );
+};
+const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
